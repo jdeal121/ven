@@ -1,0 +1,94 @@
+import java.util.Scanner;
+
+public class VendingMachine {
+    private double balance;
+    private int sodaStock;
+    private int waterStock;
+
+    public VendingMachine(int initialSodaStock, int initialWaterStock) {
+        balance = 0;
+        sodaStock = initialSodaStock;
+        waterStock = initialWaterStock;
+    }
+
+    public void insertCoin(double amount) {
+        if (amount == 0.25 || amount == 0.5 || amount == 1.0) {
+            balance += amount;
+            System.out.println("Inserted: $" + amount);
+        } else {
+            System.out.println("Invalid coin. Please insert a valid coin (0.25, 0.5, or 1.0).");
+        }
+    }
+
+    public void displayMenu() {
+        System.out.println("\nVending Machine Menu:");
+        System.out.println("1. Soda ($1.25)");
+        System.out.println("2. Water ($0.75)");
+        System.out.println("3. Return Coins");
+    }
+
+    public void purchaseItem(int choice) {
+        double price;
+        String itemName;
+
+        switch (choice) {
+            case 1:
+                price = 1.25;
+                itemName = "Soda";
+                break;
+            case 2:
+                price = 0.75;
+                itemName = "Water";
+                break;
+            default:
+                System.out.println("Invalid choice.");
+                return;
+        }
+
+        if (balance >= price) {
+            if ((choice == 1 && sodaStock > 0) || (choice == 2 && waterStock > 0)) {
+                balance -= price;
+                if (choice == 1) {
+                    sodaStock--;
+                } else {
+                    waterStock--;
+                }
+                System.out.println("Dispensing " + itemName);
+                System.out.println("Change: $" + balance);
+            } else {
+                System.out.println(itemName + " is out of stock.");
+            }
+        } else {
+            System.out.println("Insufficient balance. Please insert more coins.");
+        }
+    }
+
+    public void returnCoins() {
+        System.out.println("Returning $" + balance);
+        balance = 0;
+    }
+
+    public static void main(String[] args) {
+        VendingMachine vendingMachine = new VendingMachine(5, 5);
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            vendingMachine.displayMenu();
+            System.out.print("Enter your choice (1-3): ");
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                case 2:
+                    vendingMachine.purchaseItem(choice);
+                    break;
+                case 3:
+                    vendingMachine.returnCoins();
+                    break;
+                default:
+                    System.out.println("Invalid choice.");
+                    break;
+            }
+        }
+    }
+}
